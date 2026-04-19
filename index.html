@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBAS 歷史大數據回測系統</title>
+    <title>CBAS拆解突破5日之報酬回測</title>
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -17,12 +17,12 @@
         /* 自定義滑桿樣式 */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
+            height: 20px;
+            width: 20px;
             border-radius: 50%;
             background: #6366f1;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
         }
 
         .dark { background-color: #0f172a; color: #f8fafc; }
@@ -43,21 +43,21 @@
 </head>
 <body class="bg-[#f8fafc] text-slate-900 transition-colors duration-300">
 
-    <div id="app" class="min-h-screen p-4 md:p-10 max-w-[1400px] mx-auto">
+    <div id="app" class="min-h-screen p-4 md:p-8 max-w-[1300px] mx-auto">
         <!-- Header -->
-        <header class="mb-16 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
-            <div class="space-y-4">
-                <div class="flex items-center gap-5">
-                    <div class="p-4 rounded-[1.25rem] bg-slate-900 dark:bg-indigo-500 text-white shadow-2xl">
-                        <i data-lucide="bar-chart-3" class="w-10 h-10"></i>
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="space-y-2">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white shadow-xl">
+                        <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h1 class="text-4xl font-black tracking-tight mb-1 dark:text-white">CBAS 歷史大數據回測</h1>
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm px-3 py-1 rounded-full font-bold bg-slate-200 dark:bg-indigo-500/20 text-slate-700 dark:text-indigo-400">
+                        <h1 class="text-2xl font-black tracking-tight dark:text-white">CBAS 歷史大數據回測</h1>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-slate-200 dark:bg-indigo-500/20 text-slate-700 dark:text-indigo-400 border dark:border-indigo-500/30">
                                 核心：MA5 ≥ 20
                             </span>
-                            <span class="text-sm px-3 py-1 rounded-full font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                            <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border dark:border-amber-500/30">
                                 回測：排除最新 7 日
                             </span>
                         </div>
@@ -65,13 +65,13 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-5 w-full md:w-auto">
-                <button id="themeToggle" class="p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-all shadow-sm">
-                    <i data-lucide="moon" id="themeIcon" class="w-7 h-7"></i>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <button id="themeToggle" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-all shadow-sm">
+                    <i data-lucide="moon" id="themeIcon" class="w-5 h-5"></i>
                 </button>
                 
-                <label class="flex-1 md:flex-none cursor-pointer flex items-center justify-center gap-4 px-12 py-5 rounded-[1.5rem] bg-slate-900 dark:bg-indigo-600 hover:opacity-90 text-white transition-all font-black text-xl shadow-2xl active:scale-95">
-                    <i data-lucide="upload" class="w-7 h-7"></i>
+                <label class="flex-1 md:flex-none cursor-pointer flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-slate-900 dark:bg-indigo-600 hover:opacity-90 text-white transition-all font-bold text-base shadow-lg active:scale-95">
+                    <i data-lucide="upload" class="w-5 h-5"></i>
                     <span>匯入研究資料</span>
                     <input type="file" id="csvInput" accept=".csv" class="hidden">
                 </label>
@@ -79,58 +79,58 @@
         </header>
 
         <!-- Empty State -->
-        <div id="emptyState" class="max-w-3xl mx-auto mt-32 text-center">
-            <div class="bg-white dark:bg-slate-900 p-20 rounded-[4rem] shadow-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-                <i data-lucide="zap" class="w-20 h-20 mx-auto text-indigo-400 mb-10 opacity-20"></i>
-                <h2 class="text-3xl font-black mb-6 dark:text-white">請匯入 CSV 啟動研究</h2>
-                <div class="text-slate-500 dark:text-slate-400 text-xl space-y-4">
-                    <p>✓ 已設定過濾 MA5 < 20 的標的</p>
-                    <p>✓ 自動分組與多維度排序</p>
+        <div id="emptyState" class="max-w-2xl mx-auto mt-24 text-center">
+            <div class="bg-white dark:bg-slate-900 p-12 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-800">
+                <i data-lucide="zap" class="w-16 h-16 mx-auto text-indigo-400 mb-6 opacity-20"></i>
+                <h2 class="text-2xl font-bold mb-4 dark:text-white">請匯入 CSV 啟動回測</h2>
+                <div class="text-slate-500 dark:text-slate-400 text-lg space-y-2">
+                    <p>✓ 已自動過濾 MA5 < 20 的標的</p>
+                    <p>✓ 支援日期分組與自定義排序</p>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content (Hidden by default) -->
-        <main id="mainContent" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Main Content -->
+        <main id="mainContent" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Sidebar -->
-            <aside class="lg:col-span-3 space-y-10">
-                <div class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] shadow-sm border border-slate-200 dark:border-slate-800">
-                    <h3 class="text-sm font-black uppercase tracking-[0.3em] mb-10 opacity-50 flex items-center gap-3">
-                        <i data-lucide="filter" class="w-5 h-5"></i> 條件過濾
+            <aside class="lg:col-span-3 space-y-6">
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800">
+                    <h3 class="text-xs font-black uppercase tracking-widest mb-6 opacity-50 flex items-center gap-2">
+                        <i data-lucide="filter" class="w-4 h-4"></i> 參數過濾
                     </h3>
-                    <div class="space-y-12">
+                    <div class="space-y-8">
                         <div>
-                            <div class="flex justify-between mb-5">
-                                <label class="text-xl font-black">爆量門檻</label>
-                                <span id="thresholdVal" class="text-2xl font-mono font-black text-indigo-500">20 張</span>
+                            <div class="flex justify-between mb-3">
+                                <label class="text-sm font-bold">爆量門檻</label>
+                                <span id="thresholdVal" class="text-base font-mono font-black text-indigo-500">20 張</span>
                             </div>
-                            <input type="range" id="thresholdSlider" min="0" max="500" step="10" value="20" class="w-full h-4 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
+                            <input type="range" id="thresholdSlider" min="0" max="500" step="10" value="20" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer">
                         </div>
                         <div>
-                            <label class="text-xl font-black block mb-5">標的關鍵字</label>
+                            <label class="text-sm font-bold block mb-3">標的搜尋</label>
                             <div class="relative">
-                                <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6"></i>
-                                <input type="text" id="searchInput" placeholder="名稱或代號..." class="w-full pl-16 pr-8 py-5 rounded-3xl text-xl bg-slate-50 dark:bg-slate-800 border-none focus:ring-4 focus:ring-indigo-500/20 outline-none transition-all">
+                                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+                                <input type="text" id="searchInput" placeholder="名稱或代號..." class="w-full pl-10 pr-4 py-3 rounded-xl text-base bg-slate-50 dark:bg-slate-800 border-none focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-12 rounded-[3.5rem] bg-slate-900 dark:bg-indigo-600 text-white shadow-2xl">
-                    <i data-lucide="activity" class="text-indigo-300 mb-10 w-10 h-10"></i>
-                    <div class="space-y-10">
+                <div class="p-8 rounded-[2rem] bg-slate-900 dark:bg-indigo-700 text-white shadow-xl">
+                    <i data-lucide="activity" class="text-indigo-300 mb-6 w-8 h-8"></i>
+                    <div class="space-y-6">
                         <div>
-                            <p id="statWinRate" class="text-6xl font-black tracking-tighter">0%</p>
-                            <p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-200/60 mt-4">歷史 T+5 上漲勝率</p>
+                            <p id="statWinRate" class="text-4xl font-black tracking-tight">0%</p>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-200/50 mt-1">歷史 T+5 勝率</p>
                         </div>
-                        <div class="pt-10 border-t border-white/10 grid grid-cols-2 gap-8">
+                        <div class="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
                             <div>
-                                <p id="statCount" class="text-3xl font-black">0</p>
-                                <p class="text-xs font-bold text-indigo-200/40 uppercase mt-2">總觸發</p>
+                                <p id="statCount" class="text-xl font-bold">0</p>
+                                <p class="text-[10px] font-bold text-indigo-200/40 uppercase">總觸發</p>
                             </div>
                             <div>
-                                <p id="statAvgReturn" class="text-3xl font-black">0%</p>
-                                <p class="text-xs font-bold text-indigo-200/40 uppercase mt-2">5日均績效</p>
+                                <p id="statAvgReturn" class="text-xl font-bold">0%</p>
+                                <p class="text-[10px] font-bold text-indigo-200/40 uppercase">均報酬</p>
                             </div>
                         </div>
                     </div>
@@ -138,63 +138,61 @@
             </aside>
 
             <!-- Table Area -->
-            <div id="groupContainer" class="lg:col-span-9 space-y-16">
-                <!-- Grouped tables will be injected here -->
+            <div id="groupContainer" class="lg:col-span-9 space-y-10">
+                <!-- Data injected here -->
             </div>
         </main>
     </div>
 
     <!-- Details Modal -->
-    <div id="modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-2xl z-50 hidden items-center justify-center p-6 overflow-y-auto">
-        <div class="bg-white dark:bg-slate-900 rounded-[4rem] w-full max-w-4xl shadow-2xl border-none my-auto">
-            <div class="p-14 border-b border-slate-100 dark:border-slate-800 flex justify-between items-start">
+    <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-lg z-50 hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-3xl shadow-2xl border-none my-auto">
+            <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
                 <div>
-                    <h2 id="modalTitle" class="text-5xl font-black tracking-tighter mb-4 dark:text-white">標的名稱</h2>
-                    <span id="modalDate" class="text-sm font-black bg-indigo-500 text-white px-5 py-2 rounded-2xl uppercase tracking-widest">日期</span>
+                    <h2 id="modalTitle" class="text-2xl font-black dark:text-white">標的名稱</h2>
+                    <span id="modalDate" class="text-xs font-bold bg-indigo-500/10 text-indigo-600 px-3 py-1 rounded-lg uppercase mt-2 inline-block tracking-wider">日期</span>
                 </div>
-                <button id="closeModal" class="p-5 rounded-full bg-slate-100 dark:bg-slate-800 hover:scale-110 transition-all">
-                    <i data-lucide="x" class="w-8 h-8 text-indigo-500"></i>
+                <button id="closeModal" class="p-3 rounded-full bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 transition-all">
+                    <i data-lucide="x" class="w-6 h-6 text-indigo-500"></i>
                 </button>
             </div>
             
-            <div class="p-14">
-                <div class="grid grid-cols-3 gap-10 mb-16">
-                    <div class="p-10 rounded-[3rem] bg-slate-50 dark:bg-slate-800/50">
-                        <p class="text-sm font-black opacity-30 uppercase tracking-[0.2em] mb-4 dark:text-white">當日拆解</p>
-                        <p id="modalVal" class="text-5xl font-black text-indigo-500">0</p>
+            <div class="p-8">
+                <div class="grid grid-cols-3 gap-6 mb-10">
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
+                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">當日拆解</p>
+                        <p id="modalVal" class="text-2xl font-black text-indigo-500">0</p>
                     </div>
-                    <div class="p-10 rounded-[3rem] bg-slate-50 dark:bg-slate-800/50">
-                        <p class="text-sm font-black opacity-30 uppercase tracking-[0.2em] mb-4 dark:text-white">MA5 基底</p>
-                        <p id="modalMA5" class="text-5xl font-black dark:text-white">0</p>
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
+                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">MA5 均量</p>
+                        <p id="modalMA5" class="text-2xl font-black dark:text-white">0</p>
                     </div>
-                    <div class="p-10 rounded-[3rem] bg-slate-50 dark:bg-slate-800/50">
-                        <p class="text-sm font-black opacity-30 uppercase tracking-[0.2em] mb-4 dark:text-white">強度</p>
-                        <p id="modalRatio" class="text-5xl font-black text-amber-500">0</p>
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
+                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">爆量強度</p>
+                        <p id="modalRatio" class="text-2xl font-black text-amber-500">0</p>
                     </div>
                 </div>
                 
-                <div id="chartContainer" class="h-[350px] mb-16 px-6">
-                    <h4 class="text-center text-sm font-black opacity-20 uppercase tracking-[0.4em] mb-10 italic dark:text-white">Performance Trend (T+N)</h4>
+                <div id="chartContainer" class="h-[280px] mb-10">
+                    <h4 class="text-center text-[10px] font-black opacity-30 uppercase tracking-[0.3em] mb-6 dark:text-white">Performance Trend (T+N)</h4>
                     <div id="performanceChart"></div>
                 </div>
                 
-                <button id="closeModalBtn" class="w-full py-8 rounded-[2.5rem] bg-slate-900 dark:bg-indigo-600 hover:bg-black dark:hover:bg-indigo-500 text-white font-black text-2xl transition-all shadow-2xl">
-                    結束研究分析
+                <button id="closeModalBtn" class="w-full py-4 rounded-xl bg-slate-900 dark:bg-indigo-600 hover:opacity-90 text-white font-bold text-lg transition-all shadow-lg">
+                    關閉分析視窗
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 核心狀態 ---
         let allAnalysisResults = [];
         let sortConfig = { key: 'cbasValue', direction: 'desc' };
         let currentChart = null;
 
-        // --- 初始化 Lucide 圖標 ---
         lucide.createIcons();
 
-        // --- 黑暗模式切換 ---
+        // 黑暗模式
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         themeToggle.addEventListener('click', () => {
@@ -202,11 +200,9 @@
             const isDark = document.documentElement.classList.contains('dark');
             themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
             lucide.createIcons();
-            // 如果 Modal 打開著，更新圖表配色
             if (currentChart) renderChart(currentChart.selectedData);
         });
 
-        // --- 數字清理 ---
         function parseCleanNum(val) {
             if (!val) return 0;
             let s = val.toString().replace(/"/g, '').replace(/,/g, '').replace('%', '').trim();
@@ -215,7 +211,7 @@
             return isNaN(num) ? 0 : num;
         }
 
-        // --- CSV 解析與核心邏輯 ---
+        // CSV 解析
         document.getElementById('csvInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -245,7 +241,7 @@
                 const priceRange = findRange('標的股票漲跌幅');
 
                 if (!cbasRange || !priceRange) {
-                    alert('CSV 格式不符：找不到關鍵區域');
+                    alert('找不到關鍵數據區域，請確認 CSV 格式');
                     return;
                 }
 
@@ -281,7 +277,6 @@
                         }
                         const ma5 = sumPrev5 / 5;
 
-                        // 邏輯篩選：今日爆量且 MA5 >= 20
                         if (currentVol > ma5 && ma5 >= 20) {
                             const calcReturn = (days) => {
                                 let cum = 0;
@@ -321,7 +316,7 @@
             reader.readAsText(file);
         });
 
-        // --- UI 渲染邏輯 ---
+        // 渲染列表
         function renderUI() {
             const threshold = parseInt(document.getElementById('thresholdSlider').value);
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -331,7 +326,7 @@
                 (item.code.includes(searchTerm) || item.name.includes(searchTerm))
             );
 
-            // 更新統計
+            // 統計更新
             const valid = filtered.filter(i => i.r5 !== null);
             if (valid.length > 0) {
                 const wins = valid.filter(i => i.r5 > 0).length;
@@ -339,11 +334,9 @@
                 document.getElementById('statWinRate').textContent = ((wins / valid.length) * 100).toFixed(1) + '%';
                 document.getElementById('statCount').textContent = valid.length;
                 document.getElementById('statAvgReturn').textContent = avg.toFixed(2) + '%';
-                const colorClass = avg >= 0 ? 'text-red-400' : 'text-green-400';
-                document.getElementById('statAvgReturn').className = `text-3xl font-black ${colorClass}`;
+                document.getElementById('statAvgReturn').className = `text-xl font-bold ${avg >= 0 ? 'text-red-400' : 'text-green-400'}`;
             }
 
-            // 分組並排序
             const groupsMap = {};
             filtered.forEach(e => {
                 if (!groupsMap[e.triggerDate]) groupsMap[e.triggerDate] = [];
@@ -355,7 +348,7 @@
             groupContainer.innerHTML = '';
 
             if (sortedDates.length === 0) {
-                groupContainer.innerHTML = '<div class="p-32 text-center rounded-[4rem] border-2 border-dashed dark:border-slate-800 opacity-30 italic text-2xl">未發現符合條件之數據</div>';
+                groupContainer.innerHTML = '<div class="p-20 text-center rounded-3xl border border-dashed dark:border-slate-800 opacity-30 italic text-xl">未找到符合條件之標的</div>';
                 return;
             }
 
@@ -368,25 +361,25 @@
                 });
 
                 const groupDiv = document.createElement('div');
-                groupDiv.className = 'space-y-6';
+                groupDiv.className = 'space-y-4';
                 
                 let tableHtml = `
-                    <div class="flex items-center gap-5 px-6">
-                        <i data-lucide="calendar" class="text-indigo-500 w-7 h-7"></i>
-                        <h2 class="text-3xl font-black tracking-tighter">${date}</h2>
-                        <div class="h-px flex-1 ml-6 bg-slate-200 dark:bg-slate-800"></div>
-                        <span class="text-sm font-black opacity-30 uppercase tracking-[0.3em]">${events.length} 筆爆量</span>
+                    <div class="flex items-center gap-3 px-2">
+                        <i data-lucide="calendar" class="text-indigo-500 w-5 h-5"></i>
+                        <h2 class="text-xl font-black tracking-tight">${date}</h2>
+                        <div class="h-px flex-1 ml-4 bg-slate-200 dark:bg-slate-800"></div>
+                        <span class="text-xs font-bold opacity-30 uppercase tracking-widest">${events.length} 筆爆量</span>
                     </div>
-                    <div class="bg-white dark:bg-slate-900 rounded-[3rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-100 dark:bg-slate-800 text-[13px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-300">
+                            <thead class="bg-slate-50 dark:bg-slate-800 text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                 <tr>
-                                    <th class="px-10 py-7 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('name')">標的 / 代號 ${getSortIndicator('name')}</th>
-                                    <th class="px-10 py-7 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('cbasValue')">當日 / 5日均 ${getSortIndicator('cbasValue')}</th>
-                                    <th class="px-10 py-7 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('ratioNum')">強度 ${getSortIndicator('ratioNum')}</th>
-                                    <th class="px-10 py-7 text-center bg-indigo-500/5 text-indigo-500 cursor-pointer" onclick="handleSort('r5')">T+5 報酬 ${getSortIndicator('r5')}</th>
-                                    <th class="px-10 py-7 text-center cursor-pointer" onclick="handleSort('r7')">T+7 報酬 ${getSortIndicator('r7')}</th>
-                                    <th class="px-10 py-7 text-right">詳情</th>
+                                    <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('name')">標的代號 ${getSortIndicator('name')}</th>
+                                    <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('cbasValue')">量 / MA5 ${getSortIndicator('cbasValue')}</th>
+                                    <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('ratioNum')">強度 ${getSortIndicator('ratioNum')}</th>
+                                    <th class="px-6 py-4 text-center bg-indigo-500/5 text-indigo-500 cursor-pointer" onclick="handleSort('r5')">T+5 ${getSortIndicator('r5')}</th>
+                                    <th class="px-6 py-4 text-center cursor-pointer" onclick="handleSort('r7')">T+7 ${getSortIndicator('r7')}</th>
+                                    <th class="px-6 py-4 text-right"></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
@@ -396,32 +389,30 @@
                     const r5Color = item.r5 >= 0 ? 'text-red-500' : 'text-green-500';
                     const r7Color = item.r7 >= 0 ? 'text-red-500' : 'text-green-500';
                     tableHtml += `
-                        <tr class="hover:bg-indigo-50/30 dark:hover:bg-indigo-500/10 transition-all cursor-pointer group" onclick='openModal(${JSON.stringify(item)})'>
-                            <td class="px-10 py-9">
-                                <div class="text-2xl font-black dark:text-white group-hover:text-indigo-500">${item.name}</div>
-                                <div class="text-sm opacity-40 font-mono font-bold dark:text-slate-400">${item.code}</div>
+                        <tr class="hover:bg-indigo-50/20 dark:hover:bg-indigo-500/10 transition-all cursor-pointer group" onclick='openModal(${JSON.stringify(item)})'>
+                            <td class="px-6 py-5">
+                                <div class="text-base font-black dark:text-white group-hover:text-indigo-500">${item.name}</div>
+                                <div class="text-[10px] opacity-40 font-mono font-bold dark:text-slate-400">${item.code}</div>
                             </td>
-                            <td class="px-10 py-9">
-                                <div class="flex items-baseline gap-3">
-                                    <span class="text-3xl font-black dark:text-white">${item.cbasValue}</span>
-                                    <span class="text-sm opacity-30 font-bold tracking-widest dark:text-slate-500">/ ${item.ma5}</span>
+                            <td class="px-6 py-5">
+                                <div class="flex items-baseline gap-2">
+                                    <span class="text-lg font-black dark:text-white">${item.cbasValue}</span>
+                                    <span class="text-[10px] opacity-30 font-bold dark:text-slate-500">/ ${item.ma5}</span>
                                 </div>
                             </td>
-                            <td class="px-10 py-9">
-                                <span class="px-5 py-1.5 rounded-full text-xs font-black shadow-sm ${item.ratio === '初次爆量' ? 'bg-indigo-500 text-white' : 'bg-amber-500/10 text-amber-600'}">
+                            <td class="px-6 py-5">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-black ${item.ratio === '初次爆量' ? 'bg-indigo-500 text-white' : 'bg-amber-500/10 text-amber-600'}">
                                     ${item.ratio}
                                 </span>
                             </td>
-                            <td class="px-10 py-9 text-center font-black text-2xl bg-indigo-500/5 ${r5Color}">
+                            <td class="px-6 py-5 text-center font-black text-lg bg-indigo-500/5 ${r5Color}">
                                 ${item.r5 !== null ? (item.r5 > 0 ? '+' + item.r5 : item.r5) : '--'}%
                             </td>
-                            <td class="px-10 py-9 text-center font-black text-xl ${r7Color}">
+                            <td class="px-6 py-5 text-center font-bold text-base ${r7Color}">
                                 ${item.r7 !== null ? (item.r7 > 0 ? '+' + item.r7 : item.r7) : '--'}%
                             </td>
-                            <td class="px-10 py-9 text-right">
-                                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
-                                    <i data-lucide="chevron-right" class="w-7 h-7"></i>
-                                </div>
+                            <td class="px-6 py-5 text-right">
+                                <i data-lucide="chevron-right" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all inline"></i>
                             </td>
                         </tr>
                     `;
@@ -435,10 +426,10 @@
         }
 
         function getSortIndicator(key) {
-            if (sortConfig.key !== key) return `<i data-lucide="arrow-up-down" class="inline w-4 h-4 opacity-20 ml-1"></i>`;
+            if (sortConfig.key !== key) return `<i data-lucide="arrow-up-down" class="inline w-3 h-3 opacity-20 ml-1"></i>`;
             return sortConfig.direction === 'desc' ? 
-                `<i data-lucide="chevron-down" class="inline w-4 h-4 text-indigo-500 ml-1"></i>` : 
-                `<i data-lucide="chevron-up" class="inline w-4 h-4 text-indigo-500 ml-1"></i>`;
+                `<i data-lucide="chevron-down" class="inline w-3 h-3 text-indigo-500 ml-1"></i>` : 
+                `<i data-lucide="chevron-up" class="inline w-3 h-3 text-indigo-500 ml-1"></i>`;
         }
 
         function handleSort(key) {
@@ -451,21 +442,20 @@
             renderUI();
         }
 
-        // --- 控制器監聽 ---
+        // 監聽
         document.getElementById('thresholdSlider').addEventListener('input', (e) => {
             document.getElementById('thresholdVal').textContent = e.target.value + ' 張';
             renderUI();
         });
         document.getElementById('searchInput').addEventListener('input', renderUI);
 
-        // --- Modal & Chart ---
         function openModal(item) {
             const modal = document.getElementById('modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
             document.getElementById('modalTitle').textContent = item.name;
-            document.getElementById('modalDate').textContent = '觸發日期：' + item.triggerDate;
+            document.getElementById('modalDate').textContent = '事件日：' + item.triggerDate;
             document.getElementById('modalVal').textContent = item.cbasValue;
             document.getElementById('modalMA5').textContent = item.ma5;
             document.getElementById('modalRatio').textContent = item.ratio;
@@ -487,26 +477,25 @@
                 }],
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 280,
                     toolbar: { show: false },
-                    zoom: { enabled: false },
-                    animations: { enabled: true }
+                    zoom: { enabled: false }
                 },
-                stroke: { curve: 'smooth', width: 8, colors: ['#6366f1'] },
-                markers: { size: 10, colors: ['#6366f1'], strokeWidth: 4, strokeColors: isDark ? '#1e293b' : '#fff' },
+                stroke: { curve: 'smooth', width: 6, colors: ['#6366f1'] },
+                markers: { size: 6, colors: ['#6366f1'], strokeWidth: 2, strokeColors: isDark ? '#1e293b' : '#fff' },
                 xaxis: {
                     categories: ['T+1', 'T+3', 'T+5', 'T+7'].slice(0, [item.r1, item.r3, item.r5, item.r7].filter(v => v !== null).length),
-                    labels: { style: { colors: textColor, fontWeight: 900, fontSize: '14px' } },
+                    labels: { style: { colors: textColor, fontWeight: 700, fontSize: '11px' } },
                     axisBorder: { show: false },
                     axisTicks: { show: false }
                 },
                 yaxis: {
                     labels: { 
                         formatter: (v) => v + '%',
-                        style: { colors: textColor, fontWeight: 900, fontSize: '14px' }
+                        style: { colors: textColor, fontWeight: 700, fontSize: '11px' }
                     }
                 },
-                grid: { borderColor: isDark ? '#334155' : '#e2e8f0', strokeDashArray: 5, yaxis: { lines: { show: true } }, xaxis: { lines: { show: false } } },
+                grid: { borderColor: isDark ? '#334155' : '#e2e8f0', strokeDashArray: 4 },
                 tooltip: { 
                     theme: isDark ? 'dark' : 'light',
                     y: { formatter: (v) => v + '%' }
