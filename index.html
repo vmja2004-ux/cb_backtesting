@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBAS拆解突破5日之報酬回測</title>
+    <title>CBAS拆解突破5日均之報酬回測</title>
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -55,10 +55,10 @@
                         <h1 class="text-2xl font-black tracking-tight dark:text-white">CBAS 歷史大數據回測</h1>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-slate-200 dark:bg-indigo-500/20 text-slate-700 dark:text-indigo-400 border dark:border-indigo-500/30">
-                                核心：MA5 ≥ 20
+                                MA5 ≥ 20
                             </span>
-                            <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border dark:border-amber-500/30">
-                                回測：排除最新 7 日
+                            <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border dark:border-indigo-500/30">
+                                加入轉換價值分析
                             </span>
                         </div>
                     </div>
@@ -84,8 +84,8 @@
                 <i data-lucide="zap" class="w-16 h-16 mx-auto text-indigo-400 mb-6 opacity-20"></i>
                 <h2 class="text-2xl font-bold mb-4 dark:text-white">請匯入 CSV 啟動回測</h2>
                 <div class="text-slate-500 dark:text-slate-400 text-lg space-y-2">
+                    <p>✓ 同步追蹤 CB 轉換價值與折溢價狀態</p>
                     <p>✓ 已自動過濾 MA5 < 20 的標的</p>
-                    <p>✓ 支援日期分組與自定義排序</p>
                 </div>
             </div>
         </div>
@@ -146,7 +146,7 @@
 
     <!-- Details Modal -->
     <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-lg z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-3xl shadow-2xl border-none my-auto">
+        <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-4xl shadow-2xl border-none my-auto">
             <div class="p-8 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
                 <div>
                     <h2 id="modalTitle" class="text-2xl font-black dark:text-white">標的名稱</h2>
@@ -158,18 +158,22 @@
             </div>
             
             <div class="p-8">
-                <div class="grid grid-cols-3 gap-6 mb-10">
-                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
-                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">當日拆解</p>
-                        <p id="modalVal" class="text-2xl font-black text-indigo-500">0</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 text-center">
+                        <p class="text-[10px] font-bold opacity-40 uppercase mb-1 dark:text-white">當日拆解</p>
+                        <p id="modalVal" class="text-xl font-black text-indigo-500">0</p>
                     </div>
-                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
-                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">MA5 均量</p>
-                        <p id="modalMA5" class="text-2xl font-black dark:text-white">0</p>
+                    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 text-center">
+                        <p class="text-[10px] font-bold opacity-40 uppercase mb-1 dark:text-white">MA5 均量</p>
+                        <p id="modalMA5" class="text-xl font-black dark:text-white">0</p>
                     </div>
-                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700">
-                        <p class="text-xs font-bold opacity-40 uppercase mb-2 dark:text-white">爆量強度</p>
-                        <p id="modalRatio" class="text-2xl font-black text-amber-500">0</p>
+                    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 text-center">
+                        <p class="text-[10px] font-bold opacity-40 uppercase mb-1 dark:text-white">爆量強度</p>
+                        <p id="modalRatio" class="text-xl font-black text-amber-500">0</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border dark:border-slate-700 text-center">
+                        <p class="text-[10px] font-bold opacity-40 uppercase mb-1 dark:text-white">轉換價值</p>
+                        <p id="modalConv" class="text-xl font-black text-emerald-500">0</p>
                     </div>
                 </div>
                 
@@ -179,7 +183,7 @@
                 </div>
                 
                 <button id="closeModalBtn" class="w-full py-4 rounded-xl bg-slate-900 dark:bg-indigo-600 hover:opacity-90 text-white font-bold text-lg transition-all shadow-lg">
-                    關閉分析視窗
+                    關閉回測詳情
                 </button>
             </div>
         </div>
@@ -239,9 +243,10 @@
 
                 const cbasRange = findRange('CBAS拆解');
                 const priceRange = findRange('標的股票漲跌幅');
+                const convRange = findRange('轉換價值');
 
                 if (!cbasRange || !priceRange) {
-                    alert('找不到關鍵數據區域，請確認 CSV 格式');
+                    alert('找不到關鍵數據區域 (CBAS拆解/漲跌幅)，請確認 CSV 格式');
                     return;
                 }
 
@@ -250,8 +255,14 @@
                     const d = subHeaders[j];
                     if (d && /^\d{1,2}\/\d{1,2}$/.test(d)) {
                         const pIdx = subHeaders.indexOf(d, priceRange.start);
+                        const cIdx = convRange ? subHeaders.indexOf(d, convRange.start) : -1;
                         if (pIdx !== -1 && pIdx <= priceRange.end) {
-                            availableDates.push({ date: d, cbasIdx: j, priceIdx: pIdx });
+                            availableDates.push({ 
+                                date: d, 
+                                cbasIdx: j, 
+                                priceIdx: pIdx,
+                                convIdx: (cIdx !== -1 && cIdx <= convRange.end) ? cIdx : -1
+                            });
                         }
                     }
                 }
@@ -290,6 +301,8 @@
                                 return found ? parseFloat(cum.toFixed(2)) : null;
                             };
 
+                            const convValue = triggerDay.convIdx !== -1 ? parseCleanNum(row[triggerDay.convIdx]) : 0;
+
                             allEvents.push({
                                 id: `${stockCode}-${triggerDay.date}-${t}`,
                                 code: stockCode,
@@ -297,6 +310,7 @@
                                 triggerDate: triggerDay.date,
                                 cbasValue: currentVol,
                                 ma5: ma5.toFixed(1),
+                                convValue: convValue,
                                 ratioNum: ma5 === 0 ? 999 : (currentVol / ma5),
                                 ratio: ma5 === 0 ? '初次爆量' : (currentVol / ma5).toFixed(1) + 'x',
                                 r1: calcReturn(1),
@@ -330,7 +344,7 @@
             const valid = filtered.filter(i => i.r5 !== null);
             if (valid.length > 0) {
                 const wins = valid.filter(i => i.r5 > 0).length;
-                const avg = valid.reduce((acc, curr) => acc + curr.r5, 0) / valid.length;
+                const avg = valid.reduce((acc, curr) => acc + (curr.r5 || 0), 0) / valid.length;
                 document.getElementById('statWinRate').textContent = ((wins / valid.length) * 100).toFixed(1) + '%';
                 document.getElementById('statCount').textContent = valid.length;
                 document.getElementById('statAvgReturn').textContent = avg.toFixed(2) + '%';
@@ -348,7 +362,7 @@
             groupContainer.innerHTML = '';
 
             if (sortedDates.length === 0) {
-                groupContainer.innerHTML = '<div class="p-20 text-center rounded-3xl border border-dashed dark:border-slate-800 opacity-30 italic text-xl">未找到符合條件之標的</div>';
+                groupContainer.innerHTML = '<div class="p-20 text-center rounded-3xl border border-dashed dark:border-slate-800 opacity-30 italic text-xl dark:text-white">未找到符合條件之標的</div>';
                 return;
             }
 
@@ -366,16 +380,17 @@
                 let tableHtml = `
                     <div class="flex items-center gap-3 px-2">
                         <i data-lucide="calendar" class="text-indigo-500 w-5 h-5"></i>
-                        <h2 class="text-xl font-black tracking-tight">${date}</h2>
+                        <h2 class="text-xl font-black tracking-tight dark:text-white">${date}</h2>
                         <div class="h-px flex-1 ml-4 bg-slate-200 dark:bg-slate-800"></div>
-                        <span class="text-xs font-bold opacity-30 uppercase tracking-widest">${events.length} 筆爆量</span>
+                        <span class="text-[10px] font-bold opacity-40 uppercase tracking-widest dark:text-slate-400">${events.length} 筆爆量</span>
                     </div>
                     <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-50 dark:bg-slate-800 text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            <thead class="bg-slate-50 dark:bg-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                                 <tr>
                                     <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('name')">標的代號 ${getSortIndicator('name')}</th>
                                     <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('cbasValue')">量 / MA5 ${getSortIndicator('cbasValue')}</th>
+                                    <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('convValue')">轉換價值 ${getSortIndicator('convValue')}</th>
                                     <th class="px-6 py-4 cursor-pointer hover:bg-indigo-500/10" onclick="handleSort('ratioNum')">強度 ${getSortIndicator('ratioNum')}</th>
                                     <th class="px-6 py-4 text-center bg-indigo-500/5 text-indigo-500 cursor-pointer" onclick="handleSort('r5')">T+5 ${getSortIndicator('r5')}</th>
                                     <th class="px-6 py-4 text-center cursor-pointer" onclick="handleSort('r7')">T+7 ${getSortIndicator('r7')}</th>
@@ -388,31 +403,37 @@
                 events.forEach(item => {
                     const r5Color = item.r5 >= 0 ? 'text-red-500' : 'text-green-500';
                     const r7Color = item.r7 >= 0 ? 'text-red-500' : 'text-green-500';
+                    const convStatus = item.convValue >= 100 ? 'text-orange-500' : 'text-slate-400';
+                    
                     tableHtml += `
                         <tr class="hover:bg-indigo-50/20 dark:hover:bg-indigo-500/10 transition-all cursor-pointer group" onclick='openModal(${JSON.stringify(item)})'>
-                            <td class="px-6 py-5">
+                            <td class="px-6 py-4">
                                 <div class="text-base font-black dark:text-white group-hover:text-indigo-500">${item.name}</div>
                                 <div class="text-[10px] opacity-40 font-mono font-bold dark:text-slate-400">${item.code}</div>
                             </td>
-                            <td class="px-6 py-5">
+                            <td class="px-6 py-4">
                                 <div class="flex items-baseline gap-2">
                                     <span class="text-lg font-black dark:text-white">${item.cbasValue}</span>
                                     <span class="text-[10px] opacity-30 font-bold dark:text-slate-500">/ ${item.ma5}</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-5">
+                            <td class="px-6 py-4">
+                                <span class="text-base font-bold ${convStatus}">${item.convValue ? item.convValue.toFixed(2) : '--'}</span>
+                                ${item.convValue >= 100 ? '<span class="text-[8px] font-black ml-1 text-orange-500 uppercase tracking-tighter">價內</span>' : ''}
+                            </td>
+                            <td class="px-6 py-4">
                                 <span class="px-3 py-1 rounded-full text-[10px] font-black ${item.ratio === '初次爆量' ? 'bg-indigo-500 text-white' : 'bg-amber-500/10 text-amber-600'}">
                                     ${item.ratio}
                                 </span>
                             </td>
-                            <td class="px-6 py-5 text-center font-black text-lg bg-indigo-500/5 ${r5Color}">
+                            <td class="px-6 py-4 text-center font-black text-lg bg-indigo-500/5 ${r5Color}">
                                 ${item.r5 !== null ? (item.r5 > 0 ? '+' + item.r5 : item.r5) : '--'}%
                             </td>
-                            <td class="px-6 py-5 text-center font-bold text-base ${r7Color}">
+                            <td class="px-6 py-4 text-center font-bold text-base ${r7Color}">
                                 ${item.r7 !== null ? (item.r7 > 0 ? '+' + item.r7 : item.r7) : '--'}%
                             </td>
-                            <td class="px-6 py-5 text-right">
-                                <i data-lucide="chevron-right" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all inline"></i>
+                            <td class="px-6 py-4 text-right">
+                                <i data-lucide="chevron-right" class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all inline dark:text-white"></i>
                             </td>
                         </tr>
                     `;
@@ -459,6 +480,7 @@
             document.getElementById('modalVal').textContent = item.cbasValue;
             document.getElementById('modalMA5').textContent = item.ma5;
             document.getElementById('modalRatio').textContent = item.ratio;
+            document.getElementById('modalConv').textContent = item.convValue ? item.convValue.toFixed(2) : '--';
 
             renderChart(item);
         }
